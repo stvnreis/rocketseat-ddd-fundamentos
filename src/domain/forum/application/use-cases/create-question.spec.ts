@@ -1,13 +1,13 @@
-import { InMemoryQuestionRepository } from '../../../../../test/repositories/in-memory-question.repository';
-import { CreateQuestionUseCase } from './create-question.use-case';
+import { InMemoryQuestionRepository } from '@/../test/repositories/in-memory-question.repository';
+import { CreateQuestion } from './create-question';
 
 let inMemoryQuestionRepository: InMemoryQuestionRepository;
-let sut: CreateQuestionUseCase;
+let sut: CreateQuestion;
 
 describe('Create Question', () => {
   beforeEach(() => {
     inMemoryQuestionRepository = new InMemoryQuestionRepository();
-    sut = new CreateQuestionUseCase(inMemoryQuestionRepository);
+    sut = new CreateQuestion(inMemoryQuestionRepository);
   });
 
   it('should be able to create a question', async () => {

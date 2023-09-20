@@ -2,20 +2,20 @@ import { Answer } from '../../enterprise/entities/answer.entity';
 import { UniqueEntityId } from '../../enterprise/entities/value-objects/unique-entity-id';
 import { AnswerRepository } from '../repositories/answer.repository';
 
-interface AnswerQuestionUseCaseRequest {
+interface AnswerQuestionRequest {
   instructorId: string;
   questionId: string;
   content: string;
 }
 
-export class AnswerQuestionUseCase {
+export class AnswerQuestion {
   constructor(private readonly repository: AnswerRepository) {}
 
   async execute({
     instructorId,
     questionId,
     content,
-  }: AnswerQuestionUseCaseRequest): Promise<Answer> {
+  }: AnswerQuestionRequest): Promise<Answer> {
     const answer = Answer.create({
       content,
       questionId: new UniqueEntityId(questionId),

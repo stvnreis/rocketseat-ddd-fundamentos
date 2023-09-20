@@ -3,7 +3,7 @@ import { Entity } from '@/core/entities/entity';
 import { UniqueEntityId } from './value-objects/unique-entity-id';
 import { Optional } from '@/core/types/optional';
 
-interface QuestionProps {
+export interface QuestionProps {
   title: string;
   content: string;
   slug: Slug;
