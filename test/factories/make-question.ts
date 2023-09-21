@@ -1,7 +1,7 @@
 import {
   Question,
   QuestionProps,
-} from '@/domain/forum/enterprise/entities/question.entity';
+} from '@/domain/forum/enterprise/entities/question';
 import { UniqueEntityId } from '@/domain/forum/enterprise/entities/value-objects/unique-entity-id';
 import { faker } from '@faker-js/faker';
 

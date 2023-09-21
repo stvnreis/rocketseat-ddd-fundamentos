@@ -23,7 +23,7 @@
         "max-len": [
             2,
             {
-                "code": 80,
+                "code": 70,
                 "ignoreUrls": true,
                 "ignoreStrings": true,
                 "ignorePattern": "^import .*|(\\s*it\\([^)]*\\))"
@@ -35,28 +35,6 @@
                 "blankLine": "always",
                 "prev": "*",
                 "next": "return"
-            }
-        ],
-        "lines-between-class-members": [
-            "error",
-            {
-                "enforce": [
-                    {
-                        "blankLine": "never",
-                        "prev": "*",
-                        "next": "field"
-                    },
-                    {
-                        "blankLine": "never",
-                        "prev": "field",
-                        "next": "*"
-                    },
-                    {
-                        "blankLine": "always",
-                        "prev": "method",
-                        "next": "method"
-                    }
-                ]
             }
         ],
         "newline-before-return": "error"

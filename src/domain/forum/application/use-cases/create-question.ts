@@ -1,4 +1,4 @@
-import { Question } from '../../enterprise/entities/question.entity';
+import { Question } from '../../enterprise/entities/question';
 import { UniqueEntityId } from '../../enterprise/entities/value-objects/unique-entity-id';
 import { QuestionRepository } from '../repositories/question.repository';
 

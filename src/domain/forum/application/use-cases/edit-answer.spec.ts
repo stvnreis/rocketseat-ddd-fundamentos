@@ -26,7 +26,9 @@ describe('Edit Answer', () => {
       content: 'conteudo teste',
     });
 
-    expect(inMemoryAnswerRepository.items[0]).toMatchObject({ ...answer });
+    expect(inMemoryAnswerRepository.items[0]).toMatchObject({
+      ...answer,
+    });
   });
 
   it('should not be able to edit someone elses answer', async () => {

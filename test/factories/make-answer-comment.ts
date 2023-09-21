@@ -1,23 +1,23 @@
 import {
-  Answer,
-  AnswerProps,
-} from '@/domain/forum/enterprise/entities/answer';
+  AnswerComment,
+  AnswerCommentProps,
+} from '@/domain/forum/enterprise/entities/answer-comment';
 import { UniqueEntityId } from '@/domain/forum/enterprise/entities/value-objects/unique-entity-id';
 import { faker } from '@faker-js/faker';
 
-export function makeAnswer(
-  override: Partial<AnswerProps> = {},
+export function makeAnswerComment(
+  override: Partial<AnswerCommentProps> = {},
   id?: UniqueEntityId,
 ) {
-  const answer = Answer.create(
+  const answercomment = AnswerComment.create(
     {
+      answerId: new UniqueEntityId(),
       authorId: new UniqueEntityId('1'),
       content: faker.lorem.text(),
-      questionId: new UniqueEntityId(),
       ...override,
     },
     id,
   );
 
-  return answer;
+  return answercomment;
 }

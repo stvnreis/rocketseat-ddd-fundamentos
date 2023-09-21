@@ -1,4 +1,4 @@
-import { Answer } from '../../enterprise/entities/answer.entity';
+import { Answer } from '../../enterprise/entities/answer';
 import { AnswerRepository } from '../repositories/answer.repository';
 
 interface EditAnswerRequest {
