@@ -1,11 +1,17 @@
+import { Either, left, right } from '@/core/either';
 import { QuestionRepository } from '../repositories/question.repository';
+import { NotAllowedError } from './errors/not-allowed.error';
+import { ResourceNotFoundError } from './errors/resource-not-found.error';
 
 interface DeleteQuestionRequest {
   id: string;
   authorId: string;
 }
 
-interface DeleteQuestionResponse {}
+type DeleteQuestionResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {}
+>;
 
 export class DeleteQuestion {
   constructor(private readonly repository: QuestionRepository) {}
@@ -16,13 +22,13 @@ export class DeleteQuestion {
   }: DeleteQuestionRequest): Promise<DeleteQuestionResponse> {
     const question = await this.repository.findById(id);
 
-    if (!question) throw new Error('Question not found');
+    if (!question) return left(new ResourceNotFoundError());
 
     if (authorId !== question.authorId.toString())
-      throw new Error('Not Allowed.');
+      return left(new NotAllowedError());
 
     await this.repository.delete(question);
 
-    return {};
+    return right({});
   }
 }

@@ -1,5 +1,8 @@
+import { Either, left, right } from '@/core/either';
 import { Answer } from '../../enterprise/entities/answer';
 import { AnswerRepository } from '../repositories/answer.repository';
+import { NotAllowedError } from './errors/not-allowed.error';
+import { ResourceNotFoundError } from './errors/resource-not-found.error';
 
 interface EditAnswerRequest {
   authorId: string;
@@ -7,9 +10,10 @@ interface EditAnswerRequest {
   content: string;
 }
 
-interface EditAnswerResponse {
-  answer: Answer;
-}
+type EditAnswerResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  Answer
+>;
 
 export class EditAnswer {
   constructor(private readonly repository: AnswerRepository) {}
@@ -20,14 +24,14 @@ export class EditAnswer {
     content,
   }: EditAnswerRequest): Promise<EditAnswerResponse> {
     const answer = await this.repository.findById(answerId);
-    if (!answer) throw new Error('Answer not found');
+    if (!answer) return left(new ResourceNotFoundError());
 
     if (authorId !== answer.authorId.toString())
-      throw new Error('Not authorized');
+      return left(new NotAllowedError());
 
     answer.content = content;
     await this.repository.save(answer);
 
-    return { answer };
+    return right(answer);
   }
 }

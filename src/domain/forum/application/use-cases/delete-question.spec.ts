@@ -2,6 +2,7 @@ import { makeQuestion } from '@/../test/factories/make-question';
 import { InMemoryQuestionRepository } from '@/../test/repositories/in-memory-question.repository';
 import { UniqueEntityId } from '../../enterprise/entities/value-objects/unique-entity-id';
 import { DeleteQuestion } from './delete-question';
+import { NotAllowedError } from './errors/not-allowed.error';
 
 let inMemoryQuestionRepository: InMemoryQuestionRepository;
 let sut: DeleteQuestion;
@@ -19,8 +20,12 @@ describe('Delete Question By ID', () => {
     );
     await inMemoryQuestionRepository.create(newQuestion);
 
-    await sut.execute({ id: 'question-1', authorId: 'author-1' });
+    const result = await sut.execute({
+      id: 'question-1',
+      authorId: 'author-1',
+    });
 
+    expect(result.isRight()).toBe(true);
     expect(inMemoryQuestionRepository.items).toHaveLength(0);
   });
 
@@ -30,12 +35,10 @@ describe('Delete Question By ID', () => {
       new UniqueEntityId('question-1'),
     );
     await inMemoryQuestionRepository.create(newQuestion);
-
-    expect(async () => {
-      return await sut.execute({
-        id: 'question-1',
-        authorId: 'author-2',
-      });
-    }).rejects.toBeInstanceOf(Error);
+    const result = await sut.execute({
+      id: 'question-1',
+      authorId: 'author-2',
+    });
+    expect(result.value).toBeInstanceOf(NotAllowedError);
   });
 });

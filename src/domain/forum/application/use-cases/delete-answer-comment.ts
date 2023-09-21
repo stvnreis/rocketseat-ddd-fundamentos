@@ -1,11 +1,17 @@
+import { Either, left, right } from '@/core/either';
 import { AnswerCommentRepository } from '../repositories/answer-comment.repository';
+import { ResourceNotFoundError } from './errors/resource-not-found.error';
+import { NotAllowedError } from './errors/not-allowed.error';
 
 interface DeleteAnswerCommentRequest {
   answerCommentId: string;
   authorId: string;
 }
 
-interface DeleteAnswerCommentResponse {}
+type DeleteAnswerCommentResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {}
+>;
 
 export class DeleteAnswerComment {
   constructor(
@@ -19,13 +25,13 @@ export class DeleteAnswerComment {
     const answerComment =
       await this.quesitonCommentRepository.findById(answerCommentId);
 
-    if (!answerComment) throw new Error('Question comment not found');
+    if (!answerComment) return left(new ResourceNotFoundError());
 
     if (answerComment.authorId.toString() !== authorId)
-      throw new Error('Not authorized');
+      return left(new NotAllowedError());
 
     await this.quesitonCommentRepository.delete(answerComment);
 
-    return {};
+    return right({});
   }
 }

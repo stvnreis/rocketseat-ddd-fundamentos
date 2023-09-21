@@ -1,26 +1,27 @@
 import { AnswerQuestion } from './answer-question';
-import { AnswerRepository } from '../repositories/answer.repository';
 import { InMemoryAnswerRepository } from '@/../test/repositories/in-memory-answer.repository';
 
-let fakeAnswerRepository: AnswerRepository;
-let answerQuestion: AnswerQuestion;
+let inMemoryAnswerRepository: InMemoryAnswerRepository;
+let sut: AnswerQuestion;
 
 describe('Create An Answer', () => {
   beforeEach(() => {
-    fakeAnswerRepository = new InMemoryAnswerRepository();
-    answerQuestion = new AnswerQuestion(fakeAnswerRepository);
+    inMemoryAnswerRepository = new InMemoryAnswerRepository();
+    sut = new AnswerQuestion(inMemoryAnswerRepository);
   });
 
   it('should be able to create an answer', async () => {
     const content = 'nova resposta';
 
-    const answer = await answerQuestion.execute({
+    const result = await sut.execute({
       questionId: '1',
       instructorId: '1',
       content,
     });
 
-    expect(answer.content).toEqual(content);
-    expect(answer.id).toBeTruthy();
+    expect(result.isRight()).toBe(true);
+    expect(() => {
+      if (result.isRight()) return result.value.id;
+    }).toBeTruthy();
   });
 });

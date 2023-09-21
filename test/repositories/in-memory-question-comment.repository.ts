@@ -23,8 +23,7 @@ export class InMemoryQuestionCommentRepository
       (item) => item.id.toString() === id,
     );
 
-    if (!questionComment)
-      throw new Error('Question comment not found');
+    if (!questionComment) return null;
 
     return questionComment;
   }

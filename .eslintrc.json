@@ -37,6 +37,8 @@
                 "next": "return"
             }
         ],
-        "newline-before-return": "error"
+        "newline-before-return": "error",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/ban-types": "off"
     }
 }

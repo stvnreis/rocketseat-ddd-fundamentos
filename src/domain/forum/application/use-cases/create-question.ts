@@ -1,3 +1,4 @@
+import { Either, right } from '../../../../core/either';
 import { Question } from '../../enterprise/entities/question';
 import { UniqueEntityId } from '../../enterprise/entities/value-objects/unique-entity-id';
 import { QuestionRepository } from '../repositories/question.repository';
@@ -8,9 +9,7 @@ interface CreateQuestionRequest {
   content: string;
 }
 
-interface CreateQuestionResponse {
-  question: Question;
-}
+type CreateQuestionResponse = Either<{}, Question>;
 
 export class CreateQuestion {
   constructor(private readonly repository: QuestionRepository) {}
@@ -26,8 +25,8 @@ export class CreateQuestion {
       content,
     });
 
-    this.repository.create(question);
+    await this.repository.create(question);
 
-    return { question };
+    return right(question);
   }
 }

@@ -19,8 +19,12 @@ describe('Delete Answer By ID', () => {
     );
     await inMemoryAnswerRepository.create(newAnswer);
 
-    await sut.execute({ id: 'answer-1', authorId: 'author-1' });
+    const result = await sut.execute({
+      id: 'answer-1',
+      authorId: 'author-1',
+    });
 
+    expect(result.isRight()).toBe(true);
     expect(inMemoryAnswerRepository.items).toHaveLength(0);
   });
 
@@ -30,12 +34,11 @@ describe('Delete Answer By ID', () => {
       new UniqueEntityId('answer-1'),
     );
     await inMemoryAnswerRepository.create(newAnswer);
+    const result = await sut.execute({
+      id: 'answer-1',
+      authorId: 'author-2',
+    });
 
-    expect(async () => {
-      return await sut.execute({
-        id: 'answer-1',
-        authorId: 'author-2',
-      });
-    }).rejects.toBeInstanceOf(Error);
+    expect(result.value).toBeInstanceOf(Error);
   });
 });

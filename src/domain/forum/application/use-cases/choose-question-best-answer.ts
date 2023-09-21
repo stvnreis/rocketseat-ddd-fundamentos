@@ -1,6 +1,9 @@
+import { Either, left, right } from '@/core/either';
 import { Question } from '../../enterprise/entities/question';
 import { UniqueEntityId } from '../../enterprise/entities/value-objects/unique-entity-id';
 import { QuestionRepository } from '../repositories/question.repository';
+import { NotAllowedError } from './errors/not-allowed.error';
+import { ResourceNotFoundError } from './errors/resource-not-found.error';
 
 interface ChooseQuestionBestAnswerRequest {
   questionId: string;
@@ -8,9 +11,10 @@ interface ChooseQuestionBestAnswerRequest {
   questionAuthorId: string;
 }
 
-interface ChooseQuestionBestAnswerResponse {
-  question: Question;
-}
+type ChooseQuestionBestAnswerResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  Question
+>;
 
 export class ChooseQuestionBestAnswer {
   constructor(private readonly repository: QuestionRepository) {}
@@ -22,15 +26,15 @@ export class ChooseQuestionBestAnswer {
   }: ChooseQuestionBestAnswerRequest): Promise<ChooseQuestionBestAnswerResponse> {
     const question = await this.repository.findById(questionId);
 
-    if (!question) throw new Error('Question not found');
+    if (!question) return left(new ResourceNotFoundError());
 
     if (question.authorId.toString() !== questionAuthorId)
-      throw new Error('Not authorized');
+      return left(new NotAllowedError());
 
     question.bestAnswerId = new UniqueEntityId(bestAnswerId);
 
     await this.repository.save(question);
 
-    return { question };
+    return right(question);
   }
 }

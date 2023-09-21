@@ -20,7 +20,7 @@ export class InMemoryAnswerRepository implements AnswerRepository {
       (item) => item.id.toString() === id,
     );
 
-    if (!answer) throw new Error('Answer not found');
+    if (!answer) return null;
 
     return answer;
   }

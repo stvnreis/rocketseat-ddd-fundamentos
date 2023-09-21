@@ -1,13 +1,16 @@
+import { Either, left, right } from '@/core/either';
 import { Question } from '../../enterprise/entities/question';
 import { QuestionRepository } from '../repositories/question.repository';
+import { ResourceNotFoundError } from './errors/resource-not-found.error';
 
 interface FetchRecentQuestionsRequest {
   page: number;
 }
 
-interface FetchRecentQuestionsResponse {
-  questions: Question[];
-}
+type FetchRecentQuestionsResponse = Either<
+  ResourceNotFoundError,
+  Question[]
+>;
 
 export class FetchRecentQuestions {
   constructor(private readonly repository: QuestionRepository) {}
@@ -19,8 +22,8 @@ export class FetchRecentQuestions {
       page,
     });
 
-    if (!questions) throw new Error('No question found');
+    if (!questions) return left(new ResourceNotFoundError());
 
-    return { questions };
+    return right(questions);
   }
 }

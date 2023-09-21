@@ -26,11 +26,12 @@ describe('Delete Question Comment', () => {
     );
 
     await inMemoryQuestionCommentRepository.create(questionComment);
-    await sut.execute({
+    const result = await sut.execute({
       authorId: 'author-1',
       questionCommentId: questionComment.id.toString(),
     });
 
+    expect(result.isRight()).toBe(true);
     expect(inMemoryQuestionCommentRepository.items).toHaveLength(0);
   });
 
@@ -43,12 +44,12 @@ describe('Delete Question Comment', () => {
     );
 
     await inMemoryQuestionCommentRepository.create(questionComment);
+    const result = await sut.execute({
+      authorId: 'author-2',
+      questionCommentId: questionComment.id.toString(),
+    });
 
-    expect(async () => {
-      return await sut.execute({
-        authorId: 'author-2',
-        questionCommentId: questionComment.id.toString(),
-      });
-    }).rejects.toBeInstanceOf(Error);
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(Error);
   });
 });

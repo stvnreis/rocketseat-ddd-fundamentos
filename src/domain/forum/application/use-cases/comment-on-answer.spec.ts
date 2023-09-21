@@ -3,6 +3,8 @@ import { CommentOnAnswer } from './comment-on-answer';
 import { InMemoryAnswerRepository } from '@/../test/repositories/in-memory-answer.repository';
 import { makeAnswer } from '@/../test/factories/make-answer';
 import { UniqueEntityId } from '../../enterprise/entities/value-objects/unique-entity-id';
+import { ResourceNotFoundError } from './errors/resource-not-found.error';
+import { expect } from 'vitest';
 
 let inMemoryAnswerRepository: InMemoryAnswerRepository;
 // eslint-disable-next-line max-len
@@ -27,24 +29,26 @@ describe('Comment on Answer', () => {
 
     await inMemoryAnswerRepository.create(answer);
 
-    await sut.execute({
+    const result = await sut.execute({
       answerId: answer.id.toString(),
       authorId: 'author-1',
       content: 'teste conteudo',
     });
 
+    expect(result.isRight()).toBe(true);
     expect(inMemoryAnswerCommentRepository.items[0].content).toEqual(
       'teste conteudo',
     );
   });
 
-  it('should not be able to comment on a answer that does not exist', async () => {
-    expect(async () => {
-      return await sut.execute({
-        answerId: 'teste',
-        authorId: 'author-1',
-        content: 'teste conteudo',
-      });
-    }).rejects.toBeInstanceOf(Error);
+  it('should not be able to comment on an answer that does not exist', async () => {
+    const result = await sut.execute({
+      answerId: 'teste',
+      authorId: 'author-1',
+      content: 'teste conteudo',
+    });
+
+    expect(result.isLeft()).toBe(true);
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError);
   });
 });
